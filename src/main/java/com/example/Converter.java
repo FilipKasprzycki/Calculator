@@ -11,13 +11,13 @@ final class Converter {
         return dmsToDm(stringToDouble(degrees), stringToDouble(minutes), stringToDouble(seconds));
     }
 
+    static String dmToDms(@NonNull String degrees, @NonNull String minutes) {
+        return dmToDms(stringToDouble(degrees), stringToDouble(minutes));
+    }
+
     private static String dmsToDm(double degrees, double minutes, double seconds) {
         minutes += seconds / 60;
         return degrees + "*   " + minutes + "'";
-    }
-
-    static String dmToDms(String degrees, String minutes) {
-        return dmToDms(stringToDouble(degrees), stringToDouble(minutes));
     }
 
     private static String dmToDms(double degrees, double minutes) {

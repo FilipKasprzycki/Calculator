@@ -34,7 +34,7 @@ public class AddField {
 		private Font font;	
 		
 	// Kolory elementów
-		private SetColor setColor;
+		private ColorManager colorManager;
 		private static Color backgroundColor;
 		private static Color elementColor;
 		private static Color hoverColor;
@@ -51,10 +51,10 @@ public class AddField {
 		this.marginTopBottom = marginTopBotton; // Musi być podane w procentach
 		this.spaceHeight = spaceHeight; // Musi być podane w procentach
 		countParameters();
-		setColor = new SetColor();
-		backgroundColor = setColor.getRandomColor();
-		elementColor = setColor.getChangedColor(backgroundColor, 20);
-		hoverColor = setColor.getChangedColor(backgroundColor, 40);
+		colorManager = new ColorManager();
+		backgroundColor = colorManager.getRandomColor();
+		elementColor = colorManager.changeColor(backgroundColor, 20);
+		hoverColor = colorManager.changeColor(backgroundColor, 40);
 		
 		mouseListener = new MouseListener() {
 			@Override
