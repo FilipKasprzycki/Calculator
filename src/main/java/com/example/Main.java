@@ -1,13 +1,12 @@
 package com.example;
 
-/**
- * Hello world!
- *
- */
-public class App 
-{
-    public static void main( String[] args )
-    {
-        System.out.println( "Hello World!" );
+import javax.swing.*;
+
+public final class Main {
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            new Window();
+        });
     }
 }
