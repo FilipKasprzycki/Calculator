@@ -1,5 +1,7 @@
 package com.example;
 
+import com.example.utils.exceptions.CalculatorException;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
@@ -68,10 +70,10 @@ public class Window extends JFrame {
                 try {
                     switch(mode) {
                         case "DMS":
-                            labelText = calculate.dmsToDm(dmsDegrees.getText(), dmsMinutes.getText(), dmsSeconds.getText());
+                            labelText = Converter.dmsToDm(dmsDegrees.getText(), dmsMinutes.getText(), dmsSeconds.getText());
                             break;
                         case "DM":
-                            labelText = calculate.dmToDms(dmsDegrees.getText(), dmsMinutes.getText());
+                            labelText = Converter.dmToDms(dmsDegrees.getText(), dmsMinutes.getText());
                             break;
                     }
 
@@ -89,9 +91,6 @@ public class Window extends JFrame {
             }
         }
     };
-
-    // Inne
-    private Calculations calculate = new Calculations();
 
     public Window() {
         // Ikonka programu
