@@ -1,14 +1,22 @@
 package com.example;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
-final class ColorManager {
 
-    private final Map<Integer, Color> colors;
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class ColorManager {
 
-    ColorManager() {
+    private static final Map<Integer, Color> colors;
+    private static final Color backgroundColor;
+    private static final Color elementColor;
+    private static final Color hoverColor;
+
+    static {
         colors = new HashMap<>();
 
         int i = 0;
@@ -26,16 +34,16 @@ final class ColorManager {
         colors.put(i++, new Color(255, 222, 173));
         colors.put(i++, new Color(250, 128, 114));
         colors.put(i, new Color(216, 191, 216));
+
+        backgroundColor = random();
+        elementColor = ColorManager.changeColor(20);
+        hoverColor = ColorManager.changeColor(40);
     }
 
-    Color getRandomColor() {
-        return colors.get((int) (Math.random() * colors.size()));
-    }
-
-    Color changeColor(Color color, int value) {
-        int red = color.getRed() + value;
-        int green = color.getGreen() + value;
-        int blue = color.getBlue() + value;
+    private static Color changeColor(int value) {
+        int red = backgroundColor.getRed() + value;
+        int green = backgroundColor.getGreen() + value;
+        int blue = backgroundColor.getBlue() + value;
 
         red = red > 255 ? 255 : red;
         green = green > 255 ? 255 : green;
@@ -46,5 +54,21 @@ final class ColorManager {
         blue = blue < 0 ? 0 : blue;
 
         return new Color(red, green, blue);
+    }
+
+    private static Color random() {
+        return colors.get((int) (Math.random() * colors.size()));
+    }
+
+    public static Color getBackgroundColor() {
+        return backgroundColor;
+    }
+
+    public static Color getElementColor() {
+        return elementColor;
+    }
+
+    public static Color getHoverColor() {
+        return hoverColor;
     }
 }

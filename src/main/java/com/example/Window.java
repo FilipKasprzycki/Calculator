@@ -1,34 +1,16 @@
 package com.example;
 
-import com.example.utils.exceptions.CalculatorException;
-
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.GraphicsEnvironment;
-import java.awt.Toolkit;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-
-public class Window extends JFrame {
+final class Window extends JFrame {
 
     private AddField addField;
 
-    // Parametry pulpitu
-    private int desktopWidth;
-    private int desktopHeight;
-
-    // Parametry okna
-    private int windowWidth;
-    private int windowHeight;
-
     // Elementy okna
-    private JComboBox<String> list;
+    private JComboBox<String> fieldList;
     private String mode = "DMS";
     private JTextField dmsDegrees;
     private JTextField dmsMinutes;
@@ -44,7 +26,7 @@ public class Window extends JFrame {
     private ActionListener listActionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
 
-            switch(list.getSelectedIndex()) {
+            switch (fieldList.getSelectedIndex()) {
                 case 0:
                     mode = "DMS";
                     dmsSeconds.setEnabled(true);
@@ -68,7 +50,7 @@ public class Window extends JFrame {
             // Wy�wietlanie wyniku
             if (e.getSource() == countButton) {
                 try {
-                    switch(mode) {
+                    switch (mode) {
                         case "DMS":
                             labelText = Converter.dmsToDm(dmsDegrees.getText(), dmsMinutes.getText(), dmsSeconds.getText());
                             break;
@@ -78,12 +60,11 @@ public class Window extends JFrame {
                     }
 
                     // Upewnienie si�, �e tekst nie jest wy�wietlany z ustawieniami komunikatu o b��dzie
-                    if(label.getForeground() == Color.RED) {
+                    if (label.getForeground() == Color.RED) {
                         label.setForeground(Color.BLACK);
                         label.setFont(new Font(label.getFont().getName(), Font.PLAIN, label.getFont().getSize()));
                     }
-                }
-                catch (NumberFormatException exception) {
+                } catch (NumberFormatException exception) {
                     // Komunikat o b��dzie - pogrubienie i zmiana koloru tekstu
                     labelText = "Niew�a�ciwy format danych";
                 }
@@ -92,56 +73,42 @@ public class Window extends JFrame {
         }
     };
 
-    public Window() {
-        // Ikonka programu
-        try {
-            setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/img/icon.png")));
-        }
-        catch(Exception e) {}
-
-        // Pobranie wymiar�w pulpitu
-        desktopWidth = (int) GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().getWidth();
-        desktopHeight = (int) GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().getHeight();
-
-        // Ustawianie parametr�w okna
-        windowWidth = (int) GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().getWidth() / 2;
-        windowHeight = (int) GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().getHeight() / 2;
-        setBounds((desktopWidth - windowWidth) / 2, (desktopHeight - windowHeight) / 2, windowWidth, windowHeight);
-        setTitle("Przelicznik");
-        setLayout(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    Window() {
+        setApplicationSize();
+        super.setTitle("Calculator");
+        super.setLayout(null);
+        super.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        super.setVisible(true);
+        super.getContentPane().setBackground(ColorManager.getBackgroundColor());
 
         // Obliczanie po�o�enia element�w:
-        setVisible(true);
         addField = new AddField(getContentPane().getWidth(), getContentPane().getHeight(), 4, 5, 5, 7);
-        getContentPane().setBackground(addField.getBackgroundColor());
 
         // Dodanie listy
-        list = addField.createJComboBox();
-        list.addItem("stopnie : minuty : sekundy");
-        list.addItem("stopnie : minuty");
-        list.addActionListener(listActionListener);
-        add(list);
+        fieldList = addField.createJComboBox();
+        fieldList.addItem("stopnie : minuty : sekundy");
+        fieldList.addItem("stopnie : minuty");
+        fieldList.addActionListener(listActionListener);
+        super.add(fieldList);
 
         // Dodanie pola do wpisywania liczby
-        int widthUnit = (int) (addField.getElementWidth() / 18);
+        int widthUnit = addField.getElementWidth() / 18;
         int textFieldWidth = 5 * widthUnit;
-        int characterWidth = widthUnit;
 
-        dmsDegrees = addField.createJTextField(textFieldWidth, 0 * 6 * widthUnit, false);
+        dmsDegrees = addField.createJTextField(textFieldWidth, 0, false);
         add(dmsDegrees);
-        dmsDegreeCharacter = addField.createJLabel("*", characterWidth, 1 * 6 * widthUnit - widthUnit, false);
+        dmsDegreeCharacter = addField.createJLabel("*", widthUnit, 6 * widthUnit - widthUnit, false);
         add(dmsDegreeCharacter);
 
-        dmsMinutes = addField.createJTextField(textFieldWidth, 1 * 6 * widthUnit, false);
+        dmsMinutes = addField.createJTextField(textFieldWidth, 6 * widthUnit, false);
         add(dmsMinutes);
-        dmsMinutesCharacter = addField.createJLabel("\"", characterWidth, 2 * 6 * widthUnit - widthUnit, false);
+        dmsMinutesCharacter = addField.createJLabel("\"", widthUnit, 2 * 6 * widthUnit - widthUnit, false);
         add(dmsMinutesCharacter);
 
         if ("DMS".equals(mode)) {
             dmsSeconds = addField.createJTextField(textFieldWidth, 2 * 6 * widthUnit, false);
             add(dmsSeconds);
-            dmsSecondsCharacter = addField.createJLabel("'", characterWidth, 3 * 6 * widthUnit - widthUnit, true);
+            dmsSecondsCharacter = addField.createJLabel("'", widthUnit, 3 * 6 * widthUnit - widthUnit, true);
             add(dmsSecondsCharacter);
         }
 
@@ -155,5 +122,10 @@ public class Window extends JFrame {
         countButton = addField.createJButton("Przelicz");
         countButton.addActionListener(buttonActionListener);
         add(countButton);
+    }
+
+    private void setApplicationSize() {
+        ApplicationSize size = new ApplicationSize();
+        super.setBounds(size.getApplicationBounds());
     }
 }
