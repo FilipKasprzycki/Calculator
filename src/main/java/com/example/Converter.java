@@ -26,10 +26,6 @@ final class Converter {
     }
 
     private static double stringToDouble(String value) {
-        try {
-            return Double.parseDouble(value);
-        } catch (NumberFormatException e) {
-            return 0;
-        }
+        return Double.parseDouble(value);
     }
 }

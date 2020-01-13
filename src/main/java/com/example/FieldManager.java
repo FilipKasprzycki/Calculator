@@ -6,39 +6,28 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseListener;
 
-/*
- * Klasa tworzy przyciski i pola dla klasy Window, oraz oblicza ich położenie na podstawie rozmiarów okna
- */
+class FieldManager {
 
-public class AddField {
+    private static final int NUMBER_OF_LINES = 4;
 
-    // Odległość elementu od krawędzi okna
     private int marginLeftRight;
     private int marginTopBottom;
-    // Wysokość i szerokość okna
     private int windowWidth;
     private int windowHeight;
-    // Wysokość i szerokość elementów
     private int elementWidth;
     private int elementHeight;
-    // Odległość między elementami
-    private int spaceHeight;
-    // Numer linii
-    private int numberOfLines;
-    private int number;
-    // Czcionka
+    private int spaceHeightInPercent;
+    private int lineNumber;
     private Font font;
-    //Listener
     private MouseListener mouseListener;
 
 
-    AddField(int windowWidth, int windowHeight, int numberOfLines, int marginLeftRight, int marginTopBotton, int spaceHeight) {
+    FieldManager(int windowWidth, int windowHeight) {
         this.windowWidth = windowWidth;
         this.windowHeight = windowHeight;
-        this.numberOfLines = numberOfLines;
-        this.marginLeftRight = marginLeftRight; // Musi być podane w procentach
-        this.marginTopBottom = marginTopBotton; // Musi być podane w procentach
-        this.spaceHeight = spaceHeight; // Musi być podane w procentach
+        this.marginLeftRight = 5;
+        this.marginTopBottom = 5;
+        this.spaceHeightInPercent = 7;
         countParameters();
 
         mouseListener = new ColorfulMouseListener();
@@ -48,18 +37,17 @@ public class AddField {
     private void countParameters() {
         marginLeftRight *= windowWidth / 100;
         marginTopBottom *= windowHeight / 100;
-        spaceHeight *= windowHeight / 100;
+        spaceHeightInPercent *= windowHeight / 100;
         elementWidth = windowWidth - (2 * marginLeftRight);
-        elementHeight = ((windowHeight - (2 * marginTopBottom) - (spaceHeight * (numberOfLines - 1))) / numberOfLines);
+        elementHeight = ((windowHeight - (2 * marginTopBottom) - (spaceHeightInPercent * (NUMBER_OF_LINES - 1))) / NUMBER_OF_LINES);
         font = new Font(Font.SANS_SERIF, Font.PLAIN, (int) (elementHeight * .5));
     }
 
-    JLabel createJLabel(String text, int width, int x, boolean newLine) {
+    JLabel createTextLabel(String text, int width, int x, boolean newLine) {
         JLabel label = new JLabel();
 
-        // Dane pomocnicze
         x += marginLeftRight;
-        int y = marginTopBottom + (elementHeight + spaceHeight) * number;
+        int y = marginTopBottom + (elementHeight + spaceHeightInPercent) * lineNumber;
         int height = elementHeight;
 
         label.setBounds(x, y, width, height);
@@ -67,23 +55,22 @@ public class AddField {
         label.setFont(font);
 
         if (newLine) {
-            number++;
+            lineNumber++;
         }
 
         return label;
     }
 
-    JButton createJButton(String text) {
+    JButton createCountButton() {
         JButton button = new JButton();
 
-        // Dane pomocnicze
         int x = marginLeftRight;
-        int y = marginTopBottom + (elementHeight + spaceHeight) * number;
+        int y = marginTopBottom + (elementHeight + spaceHeightInPercent) * lineNumber;
         int width = elementWidth;
         int height = elementHeight;
 
         button.setBounds(x, y, width, height);
-        button.setText(text);
+        button.setText("Przelicz");
         button.setFont(font);
         button.setBackground(ColorManager.getElementColor());
         button.setBorder(null);
@@ -91,18 +78,16 @@ public class AddField {
         button.setFocusable(false);
         button.addMouseListener(mouseListener);
 
-        // Przejście do następnej linii
-        number++;
+        lineNumber++;
 
         return button;
     }
 
-    JTextField createJTextField() {
+    JTextField createEmptyTextField() {
         JTextField textField = new JTextField();
 
-        // Dane pomocnicze
         int x = marginLeftRight;
-        int y = marginTopBottom + (elementHeight + spaceHeight) * number;
+        int y = marginTopBottom + (elementHeight + spaceHeightInPercent) * lineNumber;
         int width = elementWidth;
         int height = elementHeight;
 
@@ -111,18 +96,16 @@ public class AddField {
         textField.setBackground(ColorManager.getBackgroundColor());
         textField.setBorder(null);
 
-        // Przejście do następnej linii
-        number++;
+        lineNumber++;
 
         return textField;
     }
 
-    JTextField createJTextField(int width, int x, boolean newLine) {
+    JTextField createEmptyTextField(int width, int x) {
         JTextField textField = new JTextField();
 
-        // Dane pomocnicze
         x += marginLeftRight;
-        int y = marginTopBottom + (elementHeight + spaceHeight) * number;
+        int y = marginTopBottom + (elementHeight + spaceHeightInPercent) * lineNumber;
         int height = elementHeight;
 
         textField.setBounds(x, y, width, height);
@@ -130,19 +113,14 @@ public class AddField {
         textField.setBackground(ColorManager.getElementColor());
         textField.setBorder(null);
 
-        if (newLine) {
-            number++;
-        }
-
         return textField;
     }
 
-    JComboBox<String> createJComboBox() {
+    JComboBox<String> createDropDownList() {
         JComboBox<String> comboBox = new JComboBox<>();
 
-        // Dane pomocnicze
         int x = marginLeftRight;
-        int y = marginTopBottom + (elementHeight + spaceHeight) * number;
+        int y = marginTopBottom + (elementHeight + spaceHeightInPercent) * lineNumber;
         int width = elementWidth;
         int height = elementHeight;
 
@@ -152,8 +130,7 @@ public class AddField {
         comboBox.setBorder(null);
         comboBox.setFocusable(false);
 
-        // Przejście do następnej linii
-        number++;
+        lineNumber++;
 
         return comboBox;
     }
